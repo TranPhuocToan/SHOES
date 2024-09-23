@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<title>Chi Tiết Sản Phẩm</title>
+<div th:replace="admin/layout/head :: head"></div>
+
+<body class="app sidebar-mini rtl">
+	<style>
+.Choicefile {
+	display: block;
+	background: #14142B;
+	border: 1px solid #fff;
+	color: #fff;
+	width: 150px;
+	text-align: center;
+	text-decoration: none;
+	cursor: pointer;
+	padding: 5px 0px;
+	border-radius: 5px;
+	font-weight: 500;
+	align-items: center;
+	justify-content: center;
+}
+
+.Choicefile:hover {
+	text-decoration: none;
+	color: white;
+}
+
+#uploadfile, .removeimg {
+	display: none;
+}
+
+#thumbbox {
+	position: relative;
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+.removeimg {
+	height: 25px;
+	position: absolute;
+	background-repeat: no-repeat;
+	top: 5px;
+	left: 5px;
+	background-size: 25px;
+	width: 25px;
+	/* border: 3px solid red; */
+	border-radius: 50%;
+}
+
+.removeimg::before {
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	content: '';
+	border: 1px solid red;
+	background: red;
+	text-align: center;
+	display: block;
+	margin-top: 11px;
+	transform: rotate(45deg);
+}
+
+.removeimg::after {
+	/* color: #FFF; */
+	/* background-color: #DC403B; */
+	content: '';
+	background: red;
+	border: 1px solid red;
+	text-align: center;
+	display: block;
+	transform: rotate(-45deg);
+	margin-top: -2px;
+}
+</style>
+	<!-- Navbar-->
+	<header th:replace="admin/layout/header :: header"></header>
+	<!-- Sidebar menu-->
+	<div th:replace="admin/layout/left-menu :: left-menu"></div>
+	<!-- Sidebar menu-->
+
+	<main class="app-content">
+		<div class="app-title">
+			<ul class="app-breadcrumb breadcrumb">
+				<li class="breadcrumb-item">Danh sách chi tiết sản phẩm</li>
+				<li class="breadcrumb-item"><a href="#">Thêm chi tiết sản
+						phẩm</a></li>
+			</ul>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="tile">
+					<h3 class="tile-title">Tạo mới chi tiết sản phẩm</h3>
+					<form class="row" method="POST" th:action="@{/productDetail/create}" th:object="${productDetail}" enctype="multipart/form-data">
+						 <div class="form-group col-md-4">
+							<label class="control-label">Mã sản phẩm chi tiết</label>
+							<input name="productDetailId" th:field="*{productDetailId}"   class="form-control" readonly="True" />
+							<div th:if="${#fields.hasErrors('productDetailId')}">
+								<p th:errors="*{productDetailId}"></p>
+							</div>
+						</div>
+						<div class="form-group col-md-4">
+							<label class="control-label" for="product">Tên sản phẩm</label>							
+							<select id="product" th:field="*{product.productId}" name="product.productName"
+								class="form-control">
+								<option th:each="product : ${productIds}" th:value="${product.productId}"
+									th:text="${product.productName}"></option>
+							</select>
+						</div>
+							<div class="form-group col-md-4">
+							<label class="control-label" for="size">Kích cỡ</label>
+							<select id="size" th:field="*{size.sizeId}" name="size.sizeId"
+								class="form-control">
+								<option th:each="sizes : ${sizeIds}" th:value="${sizes.sizeId}"
+									th:text="${sizes.sizeName}"></option>
+							</select>
+						</div>
+						<!-- a -->
+						<div class="form-group col-md-4">
+							<label class="control-label">Số Lượng</label>
+							<input class="form-control" type="number" th:field="*{quantity}" />
+							<div th:if="${#fields.hasErrors('quantity')}">
+								<p th:errors="*{quantity}"></p>
+							</div>
+						</div>
+						<div class="form-group col-md-4">
+							<label class="control-label" for="color">Màu sắc</label>
+							<select id="color" th:field="*{color.colorId}" name="color.colorId"
+								class="form-control">
+								<option th:each="colors : ${colorIds}" th:value="${colors.colorId}"
+									th:text="${colors.colorName}"></option>
+							</select>
+						</div>
+						<div class="form-group col-md-12">
+							<div class="button-container">
+								<button class="btn btn-actv">Lưu lại</button>
+								<a class="btn btn-danger" href="/productDetail">Hủy bỏ</a>
+								<a class="btn btn-warning warning-alert-left-top" href="/productDetail/form-productDetail">Làm
+									mới</a>
+							</div>
+						</div>
+						
+						<h1 th:text="${message}"></h1>
+					</form>
+				</div>
+			</div>
+		</div>
+	</main>
+
+
+	<div th:replace="admin/layout/script2 :: script2"></div>
+	</script>
+	<script>
+							const inpFile = document.getElementById("inpFile");
+							const loadFile = document.getElementById("loadFile");
+							const previewContainer = document.getElementById("imagePreview");
+							const previewImage = previewContainer
+								.querySelector(".image-preview__image");
+							const previewDefaultText = previewContainer
+								.querySelector(".image-preview__default-text");
+							inpFile.addEventListener("change", function () {
+								const file = this.files[0];
+								if (file) {
+									const reader = new FileReader();
+									previewDefaultText.style.display = "none";
+									previewImage.style.display = "block";
+									reader.addEventListener("load", function () {
+										previewImage.setAttribute("src", this.result);
+									});
+									reader.readAsDataURL(file);
+								}
+							});
+						</script>
+</body>
+
+</html>
